@@ -6,7 +6,7 @@ import React from 'react';
 import { loadOnServer } from 'redux-async-connect';
 import { Provider } from 'react-redux';
 import { renderHTMLDocument } from '../utils';
-import getReduxAsyncComponent from 'shared/redux/utils/getReduxAsyncComponent.jsx';
+//import getReduxAsyncComponent from 'shared/redux/utils/getReduxAsyncComponent.jsx';
 
 export default (store, renderProps, isomorphicTools) => {
   const serverArgs = {
@@ -20,9 +20,7 @@ export default (store, renderProps, isomorphicTools) => {
     const component = (
       <Provider
         store={store}
-      >
-        {getReduxAsyncComponent(renderProps)}
-      </Provider>
+      />
     );
 
     const payload = renderHTMLDocument({

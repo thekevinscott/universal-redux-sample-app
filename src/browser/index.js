@@ -7,7 +7,7 @@ import useScroll from 'scroll-behavior/lib/useStandardScroll';
 import createStore from 'shared/redux/createStore';
 import getRoutes from 'shared/routes';
 import renderIntoDOM from './renderIntoDOM.jsx';
-import getReduxAsyncComponent from 'shared/redux/utils/getReduxAsyncComponent.jsx';
+//import getReduxAsyncComponent from 'shared/redux/utils/getReduxAsyncComponent.jsx';
 import checkIfValidPayload from './checkIfValidPayload';
 
 const _browserHistory = useScroll(() => browserHistory)();
@@ -16,9 +16,6 @@ const history = syncHistoryWithStore(_browserHistory, store);
 
 const component = (
   <Router
-    render={(props) =>
-      getReduxAsyncComponent(props, { }, item => !item.deferred)
-    }
     history={history}
   >
     {getRoutes(store)}
