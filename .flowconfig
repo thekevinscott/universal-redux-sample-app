@@ -1,0 +1,9 @@
+[ignore]
+.*/static
+.*/node_modules/react-side-effect
+.*/node_modules/fbjs
+
+[include]
+
+[options]
+esproposal.class_static_fields=enable

@@ -1,0 +1,32 @@
+{ 
+  "extends": "eslint-config-airbnb",
+  "env": {
+    "browser": true,
+    "node": true,
+  },
+  "rules": {
+    "import/default": 0,
+    "no-console": 0,
+    "arrow-body-style": 0,
+    "spaced-comment": 0,
+    "react/prefer-stateless-function": 0,
+    "camelcase": 0,
+    "id-length": 0
+  },
+  "plugins": [
+    "react"
+  ],
+  "globals": {
+    "DISABLE_SERVER_RENDERING": true,
+    "google": true,
+    "it": true,
+    "describe": true
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaFeatures": {
+      "generators": true,
+      "experimentalObjectRestSpread": true
+    }
+  }
+}
