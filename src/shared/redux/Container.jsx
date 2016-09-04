@@ -4,7 +4,7 @@ import {
   CLIENT,
 } from 'config';
 
-export default class App extends Component {
+export default class Container extends Component {
   contextTypes : {
     store: any,
   }

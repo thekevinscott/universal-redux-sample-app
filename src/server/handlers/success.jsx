@@ -14,13 +14,14 @@ export default (store, renderProps, isomorphicTools) => {
     store,
   };
 
-  //console.log('prepare to load on server');
   return loadOnServer(serverArgs).then(() => {
-    //console.log('we have loaded on server', store.getState());
+    const Container = serverArgs.components[0];
     const component = (
       <Provider
         store={store}
-      />
+      >
+        <Container {...serverArgs} />
+      </Provider>
     );
 
     const payload = renderHTMLDocument({

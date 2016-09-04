@@ -26,6 +26,8 @@ export default (app) => {
   app.use('/api', (req, res) => {
     const url = `${API}${req.url}`;
 
+    console.log('API CALL', url);
+
     //console.log('fetch url from proxy', url);
     fetch(url).then(response => response.json()).then(response => {
       sendResponse(res, response);
