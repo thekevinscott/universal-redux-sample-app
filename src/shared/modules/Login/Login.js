@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Form } from 'shared/components/Form';
+import { Link } from 'react-router';
 
 import {
   mapDispatchToProps,
@@ -8,16 +9,17 @@ import {
 
 function Login({
   login,
+  validate,
 }: {
   login: Function,
+  validate: Function,
 }) {
   return (
     <div>
       <h1>Login</h1>
+      <p>Login with 'test@test.com' and 'password'</p>
       <Form
-        onSubmit={data => {
-          return login(data);
-        }}
+        onSubmit={data => login(data)}
         fields={[
           {
             type: 'text',
@@ -30,7 +32,13 @@ function Login({
             name: 'password',
           },
         ]}
+        validate={validate}
+        initialValues={{
+          email: 'test@test.com',
+          password: 'password',
+        }}
       />
+      <Link to="/register">Or, register.</Link>
     </div>
   );
 }

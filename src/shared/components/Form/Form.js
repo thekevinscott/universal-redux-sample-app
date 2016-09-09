@@ -1,49 +1,54 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
-
-const inputs = [];
-
-const getName = (name, label) => {
-  if (name) {
-    return name;
-  }
-
-  if (label) {
-    return label.split(' ').join('-').toLowerCase();
-  }
-
-  const newInput = `input-${inputs.length}`;
-  inputs.push(newInput);
-  return newInput;
-};
+import getName from './getName';
+import renderField from './renderField';
+import renderError from './renderError';
 
 function Form({
   handleSubmit,
   fields,
+  submitting,
+  error,
 }: {
   handleSubmit: Function,
-  fields: Array,
+  fields: Object,
+  submitting: boolean,
+  error: any,
 }) {
   return (
-    <form onSubmit={handleSubmit}>
+    <form
+      onSubmit={handleSubmit}
+      disabled={submitting}
+    >
       {fields.map(({
         name,
         type,
         label,
-      }, key) => {
+        value,
+      }) => {
         const formattedName = getName(name, label);
         return (
-          <div key={key} className="field">
-            <label htmlFor={formattedName}>{label || type || formattedName.toUpperCase()}</label>
-            <Field name={formattedName} component="input" type={type || 'text'} />
+          <div key={name} className="field">
+            <label
+              htmlFor={formattedName}
+            >
+              {label || type || formattedName.toUpperCase()}
+            </label>
+            <Field
+              name={formattedName}
+              component={renderField}
+              type={type || 'text'}
+              value={value}
+            />
           </div>
         );
       })}
+      {renderError(error, true)}
       <button type="submit">Submit</button>
     </form>
   );
 }
 
 export default reduxForm({
-  form: 'form',
+  form: 'formName',
 })(Form);

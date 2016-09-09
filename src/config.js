@@ -15,3 +15,5 @@ export const DISABLE_SERVER_RENDERING = process.env.DISABLE_SERVER_RENDERING ===
 export const SERVER_RELOAD = process.env.SERVER_RELOAD || false;
 
 export const CLIENT = process.env.CLIENT || false;
+
+export const SECRET = 'sdfkjlk23jrweoisjdk2qwejkklajlj($*$*#$&#&@#$HJKF';

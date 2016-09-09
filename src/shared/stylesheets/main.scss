@@ -8,9 +8,9 @@ form {
 }
 
 .field {
-  display: flex;
   font-size: 16px;
   margin-bottom: 20px;
+  display: flex;
 
   label, input {
     padding: 5px;
@@ -28,4 +28,15 @@ form {
 
 button[type="submit"] {
   margin-top: 20px;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+}
+
+form {
+  .error {
+    padding: 5px;
+  }
 }
