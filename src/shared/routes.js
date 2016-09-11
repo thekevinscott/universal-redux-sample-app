@@ -15,7 +15,7 @@ const requireAuthCreator = getState => (nextState, replace) => {
 
   console.log('user', user);
 
-  if (!user || !user.token) {
+  if (!user) {
     replace({
       pathname: '/login',
       state: {

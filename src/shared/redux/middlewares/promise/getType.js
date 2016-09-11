@@ -1,4 +1,4 @@
-export const getType = (type, status) => {
+const getType = (type, status) => {
   if (status === 'pending') {
     return `${type}_PENDING`;
   } else if (status === 'fulfilled') {
@@ -9,3 +9,5 @@ export const getType = (type, status) => {
 
   throw new Error(`Unsupported status ${status} requested`);
 };
+
+export default getType;

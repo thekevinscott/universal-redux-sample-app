@@ -5,7 +5,7 @@ export function fetchHome() {
   return dispatch => {
     return dispatch({
       type: 'FETCH_HOME',
-      promise: fetch('/home', {
+      fetch: fetch('/home', {
         method: 'get',
       }),
     }).then(response => {

@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 //import fetch from 'isomorphic-fetch';
 import authentication from './utils/authentication';
 //import passport from 'passport';
@@ -11,6 +12,7 @@ app.use(bodyParser.urlencoded({
 }));
 
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 import {
   //API_HOST,
@@ -18,15 +20,6 @@ import {
 } from '../src/config';
 
 authentication(app);
-
-//const loggedIn = (req, res, next) => {
-  //if (req.user) {
-    //next();
-  //} else {
-    //res.status(401);
-    //res.json({ error: 'You are not logged in' });
-  //}
-//};
 
 app.listen(API_PORT, () => {
   console.log(`API server running on port ${API_PORT}`);

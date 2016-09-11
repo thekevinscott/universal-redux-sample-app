@@ -49,19 +49,26 @@ const handleError = status => text => {
 };
 
 export default function (url, options = {}) {
-  return () => fetch(getUrl(url), {
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-    },
-    ...options,
-    ...(getBody(options.body)),
-    method: getMethod(options.method),
-  }).then(response => {
-    if (response.status >= 400) {
-      return response.text().then(handleError(response.status));
-    }
+  return middlewareOptions => {
+    const fetchOptions = {
+      ...middlewareOptions,
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        ...middlewareOptions.headers,
+      },
+      ...options,
+      ...(getBody(options.body)),
+      method: getMethod(options.method),
+      credentials: 'same-origin',
+    };
 
-    return response.json();
-  });
+    return fetch(getUrl(url), fetchOptions).then(response => {
+      if (response.status >= 400) {
+        return response.text().then(handleError(response.status));
+      }
+
+      return response.json();
+    });
+  };
 }

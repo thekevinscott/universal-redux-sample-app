@@ -10,7 +10,7 @@ export function login(body) {
   return dispatch => {
     return dispatch({
       type: LOGIN,
-      promise: fetch('/login', {
+      fetch: fetch('/login', {
         method: 'post',
         body,
       }),

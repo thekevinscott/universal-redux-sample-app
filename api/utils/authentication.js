@@ -1,12 +1,16 @@
 import passport from 'passport';
 import passportJWT from 'passport-jwt';
 import jwt from 'jsonwebtoken';
+import cookie from 'cookie';
 import {
   SECRET,
 } from '../config';
 
+// DONT DO THIS IN PRODUCTION, USE A DB
+const localSessions = {};
+
 const JwtStrategy = passportJWT.Strategy;
-const ExtractJwt = passportJWT.ExtractJwt;
+//const ExtractJwt = passportJWT.ExtractJwt;
 
 //import jwt from 'jsonwebtoken';
 
@@ -18,22 +22,30 @@ export default function (app) {
   // that the password is correct and then invoke `cb` with a user object, which
   // will be set at `req.user` in route handlers after authentication.
   passport.use(new JwtStrategy({
-    jwtFromRequest: ExtractJwt.fromAuthHeader(),
+    jwtFromRequest: req => {
+      if (req && req.cookies && localSessions[req.cookies.token]) {
+        return req.cookies.token;
+      }
+
+      return null;
+    },
     secretOrKey: SECRET,
     //issuer: "accounts.examplesoft.com",
     //audience = "yoursite.net";
     usernameField: 'email',
     passwordField: 'password',
-  }, (username, password, cb) => {
-    console.log('here is a login strategy');
-    if (username === 'test@test.com' && password === 'password') {
-      return cb(null, {
-        id: 1,
-        email: username,
-      });
+  }, ({
+    id,
+    email,
+  }, done) => {
+    if (email !== 'test@test.com') {
+      return done('Invalid user');
     }
 
-    return cb('Could not log you in');
+    return done(null, {
+      email,
+      id: 1,
+    });
   }));
 
   // Configure Passport authenticated session persistence.
@@ -44,14 +56,15 @@ export default function (app) {
   // serializing, and querying the user record by ID from the database when
   // deserializing.
   passport.serializeUser((user, cb) => {
-    console.log('serialize user', user);
+    //console.log('serialize user', user);
     cb(null, user.id);
   });
 
   passport.deserializeUser((id, cb) => {
-    console.log('de serialize user', id);
+    //console.log('de serialize user', id);
     if (id === 1) {
       return cb(null, {
+        id: 1,
         email: 'test@test.com',
       });
     }
@@ -73,14 +86,24 @@ export default function (app) {
     } = req.body;
 
     if (email === 'test@test.com' && password === 'password') {
+      //const token = 'foo';
       const token = jwt.sign({
         email,
       }, SECRET, {
         expiresIn: 1440, // expires in 24 hours
       });
 
+      localSessions[token] = true;
+      //console.log('set local session', token);
+
+      res.setHeader('Set-Cookie', cookie.serialize('token', String(token), {
+        path: '/',
+        //httpOnly: true,
+        maxAge: 60 * 60 * 24 * 7, // 1 week
+      }));
+
       return res.json({
-        token,
+        email,
       });
     }
 
@@ -93,40 +116,15 @@ export default function (app) {
   });
 
   app.use('/logout', (req, res) => {
-    console.log('time to log out');
-    req.logout();
-    res.redirect('/');
+    if (req && req.cookies) {
+      localSessions[req.cookies.token] = false;
+    }
+    res.json({});
   });
 
-  app.use('/home', (req, res) => {
-    res.status(401).json({});
-    console.log('USING /');
-    passport.authenticate('jwt', {
-      session: false,
-      //failWithError: true,
-    }, (err, user, info) => {
-      console.log('back!');
-      if (err) {
-        console.log('fail with error', err);
-        return res.status(400).send({
-          success: false,
-          error: err,
-        });
-      }
-
-      console.log(user, info);
-      return res.json({ yes: 'one' });
-
-      // handle error
-    }, () => {
-      console.log('fucking shit');
-    });
-  });
-
-  app.use('*', (req, res) => {
-    console.log('any');
-    res.json({
-      error: 'unhandled route',
-    });
+  app.use('/home', passport.authenticate('jwt', {
+    session: false,
+  }), (req, res) => {
+    return res.json({ yes: 'one' });
   });
 }

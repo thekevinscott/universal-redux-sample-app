@@ -1,7 +1,12 @@
-import {
-  actions as authenticationActions,
-} from 'shared/redux/middlewares/authentication';
 import getType from './getType';
+
+const getResult = promise => {
+  if (typeof promise === 'function') {
+    return promise();
+  }
+
+  return promise;
+};
 
 export default function promiseMiddleware({
   //dispatch,
@@ -19,22 +24,16 @@ export default function promiseMiddleware({
       ...rest,
     } = action;
 
-    const result = promise();
+    const result = getResult(promise);
 
     if (!result || !result.then) {
       return result;
     }
 
-    // promise we assume to be a function that returns
-    // a promise. other libraries might override this,
-    // in which case additional checks could be done
-    // here.
-
     const PENDING = getType(type, 'pending');
     const FULFILLED = getType(type, 'fulfilled');
     const REJECTED = getType(type, 'rejected');
 
-    console.log('export a pending', PENDING);
     // continue on through the middleware stack
     next({ ...rest, meta, type: PENDING });
 
@@ -47,10 +46,6 @@ export default function promiseMiddleware({
       });
       return response;
     }).catch(error => {
-      if (error.status === 401) {
-        next(authenticationActions.unauthenticate);
-      }
-
       next({
         type: REJECTED,
         meta,
@@ -61,3 +56,4 @@ export default function promiseMiddleware({
     });
   };
 }
+

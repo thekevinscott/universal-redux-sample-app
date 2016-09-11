@@ -1,3 +1,5 @@
+//import cookie from 'cookie';
+
 import {
   types,
 } from 'shared/modules/Login';
@@ -6,26 +8,30 @@ import {
   getType,
 } from '../promise';
 
-import {
-  SAVE_TOKEN,
-} from './types';
+//import {
+  //SAVE_TOKEN,
+//} from './types';
 
 export default function authenticationMiddleware({
-  dispatch,
+  //dispatch,
   //getState,
 }) {
   return next => action => {
     if (action.type === getType(types.LOGIN, 'fulfilled')) {
-      const {
-        response: {
-          token,
-        },
-      } = action;
+      //const {
+        //response: {
+          //token,
+        //},
+      //} = action;
 
-      dispatch({
-        type: SAVE_TOKEN,
-        token,
-      });
+      //debugger;
+      //cookie.serialize('token', token);
+      //window.c = cookie;
+
+      //dispatch({
+        //type: SAVE_TOKEN,
+        //token,
+      //});
     }
 
     return next(action);
